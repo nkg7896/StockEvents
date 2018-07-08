@@ -1,0 +1,59 @@
+<% include partials/header %>
+    <h1>Chart</h1>
+
+<link rel="stylesheet">
+  <style>
+    body {
+      margin: 20px;
+    }
+    #vis {
+      margin-bottom: 1em;
+    }
+  </style>
+
+
+<div id="vis">
+</div>
+
+
+
+<script src="https://d3js.org/d3.v4.min.js"></script>
+
+
+<script>
+    
+    var dataset;
+
+    
+    
+    d3.csv("data/daily_MSFT.csv", function(d){
+        dataset = d;
+        createChart();
+    });
+    
+    function createChart(){
+        
+        var svgWidth = 600, svgHeight = 400;
+        var margin = { top: 20, right: 20, bottom: 30, left: 50 };
+        var width = svgWidth - margin.left - margin.right;
+        var height = svgHeight - margin.top - margin.bottom;
+        
+        var svg = d3.select("#vis")
+                .append("svg")
+                .attr("width", svgWidth)
+                .attr("height", svgHeight);
+    
+        var g = svg.append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+       /* 
+        svg.selectAll("rect")
+        .data(dataset)
+        .enter()
+        .append(rect);
+        */
+    }
+</script>
+}
+
+
+<% include partials/footer %>
