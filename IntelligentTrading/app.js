@@ -3,7 +3,9 @@ var bodyParser = require('body-parser');
 var path = require('path');
 var expressValidator = require('express-validator');
 var alphaVantageAPI = require('alpha-vantage-cli').AlphaVantageAPI;
-const request = require('request');
+var request = require('request');
+var d3 = require("d3");
+            
 
 var app = express();
 
@@ -20,10 +22,6 @@ app.use(bodyParser.urlencoded({extended: false}));
 //Set Static Path
 app.use(express.static(path.join(__dirname, 'public')));
 
-//
-app.post('/api/stocks', function (req, res, next) { 
-    request()
-})
 //Gets CSV file with Alpha API
 
 
@@ -46,7 +44,9 @@ app.get('/', function(req, res){
 
 //Link to Chart
 app.get('/chart', function(req, res){
-    res.render('chart');
+    res.render('chart', {
+
+    });
 });
 
 //Adds user's first name
@@ -70,7 +70,28 @@ app.post('/users/add', function(req, res){
     
     
     console.log(newUser);
+    next();
+});
+
+//
+app.post('/api/stocks', function (req, res, next) { 
     
+        request('https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=TSLA&apikey=944GEPZXLUG844NH&datatype=csv', function (error, response, body){
+            var data = body;
+            var parsedData = d3.csvParse(data);
+            function convert(parsedData) {
+                return {
+                    date: new Date(d.date),
+                    value: +d.value         // convert string to number
+                };
+            } 
+            console.log(parsedData);
+            res.render('chart', {
+                dataset: parsedData
+            });
+        })
+
+
 });
 
 app.listen(3000, function(){
