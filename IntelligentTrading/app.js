@@ -79,18 +79,13 @@ app.post('/api/stocks', function (req, res, next) {
         request('https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=TSLA&apikey=944GEPZXLUG844NH&datatype=csv', function (error, response, body){
             var data = body;
             var parsedData = d3.csvParse(data);
-            function convert(parsedData) {
-                return {
-                    date: new Date(d.date),
-                    value: +d.value         // convert string to number
-                };
-            } 
-            console.log(parsedData);
+
+
             res.render('chart', {
                 dataset: parsedData
             });
         })
-
+        
 
 });
 
